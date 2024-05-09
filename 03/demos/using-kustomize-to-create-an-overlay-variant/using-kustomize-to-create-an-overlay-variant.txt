@@ -1,0 +1,62 @@
+PURPOSE
++++++++
+
+The purpose of this exercise is to use Kustomize to create a variant of the
+Kubernetes configuration for the example app we're using throughout the course.
+The original configuration will be the base, and the variant will be created
+from a Kustomization defined in an overlay.
+
+REQUIREMENTS
+++++++++++++
+
+This exercise simply requires an installation of the Kustomize standalone
+binary (https://github.com/kubernetes-sigs/kustomize/releases).
+
+STEPS
++++++
+
+ 1. Familiarize yourself with the directory structure and its initial content.
+
+cd config
+ls -lR
+cat *.yaml
+
+ 2. Create a Kustomization in the base directory.
+
+cd base
+kustomize create --autodetect
+
+ 3. Inspect the new Kustomization in the base directory.
+
+ls -l
+cat kustomization.yaml
+
+ 4. Perform a kuild of the Kustomization in the base directory and check its
+    content includes the Deployment and Service, but unaltered.
+
+kustomize build .
+
+ 5. Create a Kustomization in the overlay directory, referencing the base
+    directory as a resource.
+
+cd ../overlay
+kustomize create --resources ../base
+
+ 6. Add build metadata to the Kustomization, so that the rendered object
+    definitions contain the 'managed by' label.
+
+kustomize edit add buildmetadata managedByLabel
+
+ 7. Inspect the Kustomization in the overlay directory.
+
+cat kustomization.yaml
+
+ 8. Perform a kuild of the Kustomization in the overlay directory and check its
+    content includes the Deployment and Service, but with the 'managed by'
+    label added.
+
+kustomize build .
+
+Congratulations, you've just created your first variant of the base
+configuration using a Kustomize overlay. It's a simple transformation, but
+serves to demonstrate Kustomize's use. We'll build on this as we progress.

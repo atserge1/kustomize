@@ -1,0 +1,40 @@
+PURPOSE
++++++++
+
+The purpose of this exercise is to get familiar  with the Kustomize CLI, using
+the standalone binary, as well as the version built into the Kubernetes client
+CLI, kubectl.
+
+REQUIREMENTS
+++++++++++++
+
+This exercise simply requires an installation of the Kustomize standalone
+binary (https://github.com/kubernetes-sigs/kustomize/releases). It also relies
+on kubectl being installed, too. Information for installing kubectl can be
+found here (https://kubectl.docs.kubernetes.io/installation/kubectl/).
+
+STEPS
++++++
+
+ 1. Get familiar with the Kustomize CLI using its help options.
+
+kustomize --help
+kustomize build --help
+kustomize create --help
+kustomize edit --help
+
+ 2. Find out which version of Kustomize you are using.
+
+kustomize version
+
+ 3. Get familiar with the Kustomize options built into kubectl.
+
+kubectl kustomize --help
+kubectl apply --help | grep -C1 kustomize
+
+ 4. Find out which version of Kustomize is built into kubectl. Is it the same?
+
+kubectl version --short
+
+Exploring the help for the CLI helps to give you a better overview of the
+options available. We'll get to use these commands as we progress.

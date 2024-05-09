@@ -1,0 +1,60 @@
+PURPOSE
++++++++
+
+The purpose of this exercise is to use Kustomize to change the namespace part
+of the metadata for the example app's configuration. It's undefined in the
+base, but the overlay will cater for setting the namespace value for all
+objects to 'dev'. Optionally, you can test it out by applying the rendered
+output to a Kubernetes cluster.
+
+REQUIREMENTS
+++++++++++++
+
+This exercise simply requires an installation of the Kustomize standalone
+binary (https://github.com/kubernetes-sigs/kustomize/releases). If you plan to
+deploy the app to test it out, you'll also need to have a Kubernetes cluster
+available, as well as the kubectl CLI installed. Information for installing
+kubectl is here (https://kubectl.docs.kubernetes.io/installation/kubectl/).
+
+STEPS
++++++
+
+ 1. Create a Namespace object definition to use as a Kustomize resource. This
+    can be done by hand, or by using the 'kubectl create' command.
+
+cd config/overlay
+kubectl create namespace dev --dry-run=client -o yaml > namespace.yaml
+cat namespace.yaml
+
+ 2. Amend the overlay Kustomization to include the new resource, and to set the
+    Namespace for all resources in the scope of the Kustomization. It should
+    look like this:
+
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+  - namespace.yaml
+buildMetadata:
+  - managedByLabel
+namespace: dev
+
+ 3. Perform a build of the Kustomization in the overlay directory and check its
+    content includes the Namespace, and that all objects have their namespace
+    set to 'dev' accordingly.
+
+kustomize build .
+
+ 4. If you have a Kubernetes cluster available to test the rendered config,
+    repeat the build and send the output to 'kubectl apply'.
+
+kustomize build . | kubectl apply -f -
+
+ 5. Check that the app has been deployed as expected.
+
+kubectl -n dev get all
+
+Good job, you've used your first transformer, the NamespaceTransformer, to
+mutate the base configuration of the app in an overlay variant. This is the
+first of the metadata transformers, we'll use some of the others later on.
